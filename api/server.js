@@ -7,6 +7,7 @@ const { callDueDatePassedUsers } = require('./crons/callCrons');
 
 
 dotenv.config({})
+//database
 connectDB();
 
 app.listen(process.env.PORT,()=>{

@@ -1,7 +1,7 @@
 const jwt=require('jsonwebtoken')
 
 exports.accessToken=(user,statusCode,res)=>{
-    // console.log(process.env.ACCESS_SECRET_TOKEN)
+
     const token= jwt.sign({
         user: {
             id:user._id,
@@ -17,11 +17,11 @@ exports.accessToken=(user,statusCode,res)=>{
         ),
         httpOnly:true
     }
-    res.status(statusCode).cookie('token',token,options).json({
-        success:true,
-        user,
-        token,
-    })
+    // res.status(statusCode).cookie('token',token,options).json({
+    //     success:true,
+    //     user,
+    //     token,
+    // })
 
     return token;
 }

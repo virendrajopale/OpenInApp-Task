@@ -19,10 +19,12 @@ exports.createUser=asyncHandler(async(req,res,next)=>{
         priority
     })
    
+    const token=accessToken(user,200,res);
+
     if(user){
-       const token=accessToken(user,200,res);
         res.status(200).json(
-            {user,
+            {
+                user,
                 token:token
             }
         )
