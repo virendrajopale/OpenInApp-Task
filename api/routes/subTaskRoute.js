@@ -7,7 +7,8 @@ const { createSubTask, getsubTaskByUser, getAllSubTask, updateSubTask, deleteSub
 const router=express.Router()
 
 router.route('/newSubTask').post(validateToken,createSubTask)
-router.route('/getSubTask/:id').get(validateToken,getsubTaskByUser)
+router.route('/getSubTask/:task_id').get(validateToken,getsubTaskByUser)
+
 router.route('/getAllSubTask').get(validateToken,getAllSubTask)
 router.route('/updateSubTask/:sid').put(validateToken,updateSubTask)
 router.route('/deleteSubTask/:sid').delete(validateToken,deleteSubTask)

@@ -48,28 +48,34 @@ exports.getAllSubTask = asyncHandler(async (req, res, next) => {
     }
 })
 exports.getsubTaskByUser = asyncHandler(async (req, res, next) => {
-    try {
-        const id = req.params.id;
-        const task = await Task.find({ user: id, deleted_at: null })
-        // const ids=task.map((sbtask)=>sbtask.)
-        const taskIds = task.map((tsk) => tsk._id);
-        const subtask = await SubTask.find({ task_id: taskIds });
-        if (!subtask) {
-            res.status(402).json({
-                messege: "Subtask does not exist"
-            })
-        }
-        res.status(201).json({
-            subtask
-        })
-
-    } catch (err) {
-        res.status(400).json({
-            message: "Error in id"
-        })
+    const {task_id} = req.params;
+    if (!task_id) {
+        throw new Error('Task ID is required');
     }
+
+   
+
+    const task = await Task.findOne({
+        _id: task_id,
+        user: req.user.id,
+        deletedAt: null,
+    });
+    if (!task) {
+        throw new ApiError(404, 'Task not found');
+    }
+
+    const subTasks = await SubTask.find({task_id: task_id, deletedAt: null});
+
+    const data = {
+        subTasks,
+        totalSubTasks: subTasks.length,
+    };
+
+    return res
+        .status(200)
+        .json( data);
 })
-exports.updateSubTask = asyncHandler(async (req, res) => {
+exports.updateSubTask = asyncHandler(async (req, res,next) => {
     const { sid } = req.params;
 
     if (!sid) {
@@ -88,9 +94,10 @@ exports.updateSubTask = asyncHandler(async (req, res) => {
     }
 
     const subTask = await SubTask.findOneAndUpdate(
-        { _id: sid ,
+      { _id: sid ,
          status ,
-        updated_at:Date.now()}
+        updated_at:Date.now()
+    }
       
     );
 
